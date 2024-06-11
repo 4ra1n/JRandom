@@ -4,6 +4,7 @@ import me.n1ar4.jrandom.log.LogManager;
 import me.n1ar4.jrandom.log.Logger;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -90,6 +91,10 @@ public class JNIUtil implements Constants {
     public static void extractDllSo(String filename, String dir, boolean load) {
         InputStream is = null;
         try {
+            try {
+                DirUtil.removeDir(new File(dir));
+            } catch (Exception ignored) {
+            }
             is = JNIUtil.class.getClassLoader().getResourceAsStream(filename);
             if (is == null) {
                 logger.debug("error dll name");
