@@ -42,7 +42,7 @@ if (WIN32)
     target_link_libraries(jrandom
             PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/jrandom_asm.obj
     )
-elseif (LINUX)
+else ()
     MESSAGE("BUILD LINUX")
 
     enable_language(ASM_NASM)
