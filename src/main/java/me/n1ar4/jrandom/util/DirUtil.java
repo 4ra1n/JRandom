@@ -1,7 +1,7 @@
 package me.n1ar4.jrandom.util;
 
-import me.n1ar4.jrandom.log.LogManager;
-import me.n1ar4.jrandom.log.Logger;
+import me.n1ar4.log.LogManager;
+import me.n1ar4.log.Logger;
 
 import java.io.File;
 import java.util.ArrayList;

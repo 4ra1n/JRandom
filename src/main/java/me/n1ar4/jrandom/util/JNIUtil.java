@@ -1,7 +1,7 @@
 package me.n1ar4.jrandom.util;
 
-import me.n1ar4.jrandom.log.LogManager;
-import me.n1ar4.jrandom.log.Logger;
+import me.n1ar4.log.LogManager;
+import me.n1ar4.log.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,18 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * JNI Utils
- */
 public class JNIUtil implements Constants {
     private static final Logger logger = LogManager.getLogger();
     private static final String lib = "java.library.path";
 
-    /**
-     * Make new JNI lib effective
-     *
-     * @return success or not
-     */
     @SuppressWarnings("all")
     private static boolean deleteUrls() {
         try {
@@ -37,12 +29,11 @@ public class JNIUtil implements Constants {
         return false;
     }
 
-    /**
-     * Load JNI lib
-     *
-     * @param path dll/so path
-     * @return success or not
-     */
+    private static boolean isJava8() {
+        String javaVersion = System.getProperty("java.version");
+        return javaVersion.startsWith("1.8.");
+    }
+
     public static boolean loadLib(String path) {
         Path p = Paths.get(path);
         if (!Files.exists(p)) {
@@ -57,19 +48,23 @@ public class JNIUtil implements Constants {
         String libDirAbsPath = Paths.get(p.toFile().getParent()).toAbsolutePath().toString();
         String originLib = System.getProperty(lib);
         if (os.contains(WindowsOS)) {
-            originLib = originLib + String.format(";%s;", libDirAbsPath);
-            System.setProperty(lib, originLib);
-            if (!deleteUrls()) {
-                return false;
+            if (isJava8()) {
+                originLib = originLib + String.format(";%s;", libDirAbsPath);
+                System.setProperty(lib, originLib);
+                if (!deleteUrls()) {
+                    return false;
+                }
+                String dll = p.toFile().getName().toLowerCase();
+                if (!dll.endsWith(DllFile)) {
+                    logger.debug("load lib error: must be a dll file");
+                    return false;
+                }
+                String file = dll.split("\\.dll")[0].trim();
+                logger.debug("load library: " + file);
+                System.loadLibrary(file);
+            } else {
+                System.load(p.toFile().getAbsolutePath());
             }
-            String dll = p.toFile().getName().toLowerCase();
-            if (!dll.endsWith(DllFile)) {
-                logger.debug("load lib error: must be a dll file");
-                return false;
-            }
-            String file = dll.split("\\.dll")[0].trim();
-            logger.debug("load library: " + file);
-            System.loadLibrary(file);
         } else {
             String so = p.toFile().getAbsolutePath();
             if (!so.endsWith(SOFile)) {
@@ -83,11 +78,6 @@ public class JNIUtil implements Constants {
         return true;
     }
 
-    /**
-     * Write dll/so file to temp directory and load it
-     *
-     * @param filename dll/so file name in resources
-     */
     public static void extractDllSo(String filename, String dir, boolean load) {
         InputStream is = null;
         try {

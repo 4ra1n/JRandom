@@ -1,4 +1,4 @@
-package me.n1ar4.jrandom.log;
+package me.n1ar4.log;
 
 import java.io.IOException;
 import java.io.OutputStream;
