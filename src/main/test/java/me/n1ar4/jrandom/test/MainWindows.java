@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main {
+public class MainWindows {
     public static void main(String[] args) throws Exception {
         LogManager.setLevel(LogLevel.DEBUG);
         Files.createDirectories(Paths.get(Constants.TempDir));

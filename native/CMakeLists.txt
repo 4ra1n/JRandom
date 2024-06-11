@@ -22,7 +22,7 @@ if (WIN32)
     add_custom_target(
             jrandom_asm ALL
             COMMAND ml64 /c /Fo${CMAKE_CURRENT_BINARY_DIR}/jrandom_asm.obj
-            ${CMAKE_CURRENT_SOURCE_DIR}/jrandom.asm
+            ${CMAKE_CURRENT_SOURCE_DIR}/jrandom_windows.asm
             BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/jrandom_asm.obj
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
@@ -35,6 +35,30 @@ if (WIN32)
 
     set_property(TARGET jrandom_asm PROPERTY
             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+    )
+
+    add_dependencies(jrandom jrandom_asm)
+
+    target_link_libraries(jrandom
+            PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/jrandom_asm.obj
+    )
+elseif (LINUX)
+    MESSAGE("BUILD LINUX")
+
+    enable_language(ASM_NASM)
+
+    add_custom_target(
+            jrandom_asm ALL
+            COMMAND nasm -f elf64 ${CMAKE_CURRENT_SOURCE_DIR}/jrandom_linux.asm
+            -o ${CMAKE_CURRENT_BINARY_DIR}/jrandom_asm.obj
+            BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/jrandom_asm.obj
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+
+    add_library(
+            jrandom SHARED
+            jni_jrandom.h
+            jni_jrandom.c
     )
 
     add_dependencies(jrandom jrandom_asm)
