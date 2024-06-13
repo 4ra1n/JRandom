@@ -1,8 +1,12 @@
 package me.n1ar4.jrandom.core;
 
+import me.n1ar4.jrandom.util.Constants;
+import me.n1ar4.jrandom.util.JNIUtil;
+import me.n1ar4.jrandom.util.OSUtil;
 import me.n1ar4.log.LogManager;
 import me.n1ar4.log.Logger;
 
+import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.List;
 
@@ -22,6 +26,20 @@ public class JRandom {
     private final SecureRandom random = new SecureRandom();
 
     public JRandom() {
+        // JNI 加载
+        try {
+            Files.createTempDirectory(Constants.TempDir);
+            if (OSUtil.getOSType().equals(OSUtil.OSType.LINUX)) {
+                JNIUtil.extractDllSo("libjrandom.so", Constants.TempDir, true);
+            } else if (OSUtil.getOSType().equals(OSUtil.OSType.WINDOWS)) {
+                JNIUtil.extractDllSo("jrandom.dll", Constants.TempDir, true);
+            } else {
+                logger.debug("target os not supported");
+            }
+        } catch (Exception ex) {
+            logger.debug("load native error: {}", ex.toString());
+        }
+
         if (checkRDRAND() == 0) {
             supportRDRAND = false;
             random.setSeed(System.currentTimeMillis());

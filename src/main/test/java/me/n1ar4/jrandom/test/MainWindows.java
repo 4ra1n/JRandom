@@ -14,14 +14,9 @@ import java.util.List;
 public class MainWindows {
     public static void main(String[] args) throws Exception {
         LogManager.setLevel(LogLevel.DEBUG);
-
-        Files.createTempDirectory("jrandom");
-
-        JNIUtil.extractDllSo("jrandom.dll", Constants.TempDir, true);
         JRandom random = new JRandom();
-        for (int i = 0; i < 1000; i++) {
-            long a = random.getInt(0,5);
-            System.out.println(a);
+        for (int i = 0; i < 10; i++) {
+            System.out.println(random.randomString(10));
         }
     }
 }
