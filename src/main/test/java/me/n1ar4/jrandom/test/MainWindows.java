@@ -14,20 +14,14 @@ import java.util.List;
 public class MainWindows {
     public static void main(String[] args) throws Exception {
         LogManager.setLevel(LogLevel.DEBUG);
-        Files.createDirectories(Paths.get(Constants.TempDir));
+
+        Files.createTempDirectory("jrandom");
+
         JNIUtil.extractDllSo("jrandom.dll", Constants.TempDir, true);
         JRandom random = new JRandom();
-        List<Long> l = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
-            long a = random.getInt();
+            long a = random.getInt(0,5);
             System.out.println(a);
-            if (l.contains(a)) {
-                System.out.println("DUP");
-                System.out.println(a);
-                break;
-            } else {
-                l.add(a);
-            }
         }
     }
 }
