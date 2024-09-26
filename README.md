@@ -27,7 +27,7 @@ success:
 <dependency>
     <groupId>io.github.4ra1n</groupId>
     <artifactId>jrandom</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
