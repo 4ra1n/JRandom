@@ -1,8 +1,8 @@
 ## JRandom
 
-`JRandom` 是我摸鱼时测试 `Java` 随机数编写的项目
+`JRandom` 是一个简单的 `Java` 随机库，不同于大部分随机库，它使用独特的技术确保安全性
 
-它会尝试使用 `CPU` 的 `RDRAND` 生成随机数，如果不支持将会使用 `SecureRandom`
+它会尝试使用 `CPU` 的 `RDRAND` 指令获取随机数，如果不支持将会使用 `SecureRandom`
 
 核心代码
 
@@ -19,6 +19,16 @@ success:
     mov [rdi], eax
     mov eax, 1
     ret
+```
+
+本项目已发布在 `Maven` 中央仓库可直接引入
+
+```xml
+<dependency>
+    <groupId>io.github.4ra1n</groupId>
+    <artifactId>jrandom</artifactId>
+    <version>0.0.1</version>
+</dependency>
 ```
 
 在 `Java` 层使用会很简单
